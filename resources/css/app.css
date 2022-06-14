@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+p {
+    @apply pt-4 pb-3;
+}
+
+h1 {
+    @apply font-bold text-4xl my-4;
+}

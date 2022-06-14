@@ -1,0 +1,370 @@
+Diseño de la BBDD
+
+users y profiles
+Relación 1 a 1: un usuario solo tiene un perfil y un perfil solo le pertenece a un usuario
+
+users y courses como profesor
+Relación 1 a muchos: un usuario (profesor) va a subir varios cursos, pero un curso solo podrá ser subido por un profesor
+
+users y courses como alumnos
+Relación muchos a muchos: muchos alumnos matriculados en muchos cursos
+Creación de una tabla intermedia: course_user
+
+users y reviews
+Relación 1 a muchos: un usuario puede hacer muchos reviews, pero un review sólo le pertenece a un usuario
+
+courses y reviews
+Relación 1 a muchos: un curso puede tener muchos reviews, pero un review sólo le pertenece a un curso
+
+levels y courses
+Relación 1 a muchos: un nivel puede tener varios cursos, pero un curso solo pertenece a un nivel
+
+categories y courses
+Relación 1 a muchos: una categoría tiene muchos cursos, pero un curso solo tiene una categoría
+
+prices y courses
+Relación 1 a muchos: un precio tiene muchos cursos, pero un curso solo tiene un precio
+
+courses y goals
+Relación de 1 a muchos: un curso puede tener muchas metas, pero una meta solo pertenece a un curso
+
+courses y requirements
+Relación de 1 a muchos: un curso puede tener muchos requisitos, pero un requisito solo pertenece a un curso
+
+courses y audiences
+Relación de 1 a muchos: un curso puede tener muchas audiencias, pero una audiencia solo pertenece a un curso
+
+courses y sections
+Relación de 1 a muchos: un curso puede tener muchas secciones, pero una sección solo pertenece a un curso
+
+sections y lessons
+Relación de 1 a muchos: una sección puede tener muchas lecciones, pero una lección solo pertenece a un sección
+
+platforms y lessons
+Relación de 1 a muchos: una plataforma puede tener muchas lecciones, pero una lección solo pertenece a una plataforma
+
+lessons y descriptions
+Relación de 1 a 1: una lección solo puede tener una descripción y una descripción solo pertenece a una lección
+
+users y lessons
+Relación muchos amuchos: un usuario tiene muchas lecciones, y una lección le pertenece a muchos usuarios
+Creación de una tabla intermedia: lesson_user
+
+resources: tabla polimórfica
+
+comments: tabla polimórfica
+
+reactions: tabla polimórfica
+
+images: tabla polimórfica
+
+comments y users
+Relación 1 a muchos: un usuario hace muchos comentarios, pero un comentario solo es hecho por un usuario
+
+reactions y users
+Relación uno a muchos: un usuario puede tener muchsreaciones, pero una reación solo puede ser hecha por un usuario
+
+images y courses
+Relación 1 a 1: un curso solo tiene una imagen, y una imagen solole pertenece a un curso
+
+-------------------------------------------------------------------------------------------------------------------------
+
+1. Crear el proyecto:
+
+laravel new codigo --jet
+
+******************
+
+2. Crear el hosting virtual
+
+******************
+
+3. Correr comandos
+
+npm install
+npm run dev
+npm run watch 
+
+******************
+
+4. Agregar al: \webpack.mix.js
+
+mix.disableNotifications()
+
+******************
+
+5. Establecer en el: \.env 
+
+FILESYSTEM_DISK=public
+
+******************
+
+6. Descomentar en el: config\jetstream.php
+
+Features::profilePhotos()
+
+******************
+
+7. Correr las migraciones:
+
+php artisan migrate
+
+******************
+ 
+8. Crear seeder UserSeeder
+
+php artisan make:seeder UserSeeder
+
+User::create([
+    'name' => 'Javier Peláez',
+    'email' => 'hjpelaezcasas@hotmail.com',
+    'password' => bcrypt('123456789'),
+])->assignRole('Admin');
+
+User::factory(10)->create();
+
+******************
+
+9. Registrar el UserSeeder en: \database\seeders\DatabaseSeeder.php
+
+$this->call(UserSeeder::class);
+
+******************
+
+10. Correr migraciones y seeder:
+
+php artisan migrate:fresh --seed
+
+******************
+
+11. Crear modelos y migraciones 
+
+php artisan make:model Levels -m
+php artisan make:model Categories -m
+php artisan make:model Prices -m
+php artisan make:model Course -m
+
+******************
+
+12. Crear tabla intermedia entre cursos y usuarios para hacer relación muchos a muchos
+
+php artisan make:migration create_course_user_table
+
+******************
+
+13. Crear modelos y migraciones
+
+php artisan make:model Review -m
+php artisan make:model Profile -m
+
+******************
+
+14. Correr migraciones y seeder:
+
+php artisan migrate:fresh --seed
+
+******************
+
+15. Crear relación 1 a 1 entre los modelos User: (profile()) y Profile: (user())
+
+16. Crear relación 1 a muchos entre los modelo User (courses_dictated()) y Course (teacher())
+
+17. Crear relación muchos a muchos entre los modelo User (courses_enrolled()) y Course (students())
+
+18. Crear relación 1 a muchos entre los modelo User (reviews()) y reviews (course())
+
+19. Crear relación 1 a muchos entre los modelos Course (level() - category() - price()) y Level (courses()), y Category (courses()), y Price (courses())
+
+******************
+
+20. CrEAR modelo y migraciones
+
+php artisan make:model Requirement -m
+php artisan make:model Goal -m
+php artisan make:model Audience -m
+php artisan make:model Section -m
+
+php artisan migrate
+
+******************
+
+21. Crear relación 1 a muchos entre los modelos Curso (requirement()) y Requirement (course())
+22. Crear relación 1 a muchos entre los modelos Curso (goals()) y Goal (course())
+23. Crear relación 1 a muchos entre los modelos Curso (sections()) y Section (course())
+24. Crear relación 1 a muchos entre los modelos Curso (audiences()) y Audience (course())
+
+
+******************
+
+25. Crear modelos y migracione
+
+php artisan make:model Platform -m
+php artisan make:model Lesson -m
+php artisan make:model Description -m
+
+******************
+
+26. Crear tabla intermedia Lessons Users
+
+php artisan make:migration create_lesson_user_table
+
+php artisan migrate
+
+******************
+
+27. Crear relación 1 a muchos entre los modelos Section (lessons()) y Lesson (section())
+28. Crear relación 1 a muchos entre los modelos Platform (lessons()) y Lesson (platform())
+29. Crear relación 1 a 1 entre los modelos Lesson (description()) y Description (lesson())
+30. Crear relación muchos a muchos entre los modelos Lesson (users()) y User (lessons)
+
+******************
+
+31. Crear modelos polimórficos: php artisan make:model Resource -m
+32. Crear modelos polimórficos: php artisan make:model Comment -m
+33. Crear modelos polimórficos: php artisan make:model Reaction -m
+34. Crear modelos polimórficos: php artisan make:model Image -m
+
+php artisan migrate
+
+******************
+
+35. Crear relación polimórfica Comment (commentable()) - Image (imageable()) - Reaction (reactionable()) y Resource (resourceable()) 
+36. Crear relación 1 a 1 polimórfica del modelo Lesson (resource()) y Resource (resourceable())
+37. Crear relación 1 a muchos polimórfica entre los modelos Lesson (comments()) y Comment (commentable())
+38. crear relación 1 a muchos polimórfica entre Lesson (reactions()) y Reaction (reactionable())
+39. Crear relación 1 a 1 polimórfica entre los modelos Course (image()) e Image (imageable())
+40. Crear un relación entre dos tablas a través de una tabla intermedia: Lesson y Course mediante Section: lessons()
+41. Crear relación uno a muchos entre los modelos User (comments()) y Comment ()
+42. Crear relación uno a muchos entre los modelos User (reactions()) y Reaction ()
+43. Crear una relación 1 a 1 polimórfica entre los modelos Images () y Courses ()
+
+******************
+
+44. Habilitar asignación masiva:
+
+Todos:
+protected $guarded = ['id'];
+y en Course:
+protected $guarded = ['id', 'status'];
+
+******************
+
+45. Crear los seeders y factories
+
+php artisan make:seeder LevelSeeder
+php artisan make:seeder CategorySeeder
+php artisan make:seeder PriceSeeder 
+
+php artisan migrate:fresh --seed
+
+php artisan make:seeder CourseSeeder
+php artisan make:factory CourseFactory
+php artisan make:factory ImageFactory
+
+******************
+
+46. Crear image faker:
+
+composer require --dev smknstd/fakerphp-picsum-images
+
+// faker para img
+$faker = \Faker\Factory::create();
+$faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
+
+return [
+    'url' => 'courses/' . $faker->image('storage/app/public/courses', 640, 480, false),
+];
+
+php artisan  migrate:fresh --seed
+
+******************
+
+47. Más factories
+
+php artisan make:factory RequirementFactory
+php artisan make:factory GoalFactory     
+php artisan make:factory AudienceFactory
+php artisan make:factory SectionFactory  
+
+php artisan  migrate:fresh --seed
+
+******************
+
+48. Más factories y seeders
+
+// Este seeder se coloca antes del CourseSeeeder
+php artisan make:seeder PlatformSeeder
+
+php artisan make:factory LessonFactory 
+php artisan make:factory DescriptionFactory 
+
+php artisan  migrate:fresh --seed
+
+******************
+
+49. página de inicio
+
+Para que la página de inicio redirija a dominio.com/ ir a:
+
+\app\Providers\RouteServiceProvider.php
+
+public const HOME = '/';
+
+******************
+
+50. Crear route para admin
+
+Crear archivo: admin.php y agregar:
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('admin', function () {
+    return 'ruta admin';
+
+});
+
+y en el método boot() de \app\Providers\RouteServiceProvider.php agregar:
+
+Route::middleware('web', 'auth')
+    ->prefix('admin')
+    ->group(base_path('routes/admin.php'));
+
+******************
+
+51. Crear controlador para administrar las routes del admin
+
+php artisan make:controller Admin/HomeController
+
+******************
+
+52. instalar adminlte
+
+https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Installation
+
+******************
+
+53. Instalar los componentes de jetstream
+
+php artisan vendor:publish --tag=jetstream-views
+
+Estos se alojarán en: 
+
+resources\views\vendor\jetstream\components
+
+******************
+******************
+******************
+******************
+******************
+******************
+******************
+******************
+******************
+******************
+
+
+
+
+
